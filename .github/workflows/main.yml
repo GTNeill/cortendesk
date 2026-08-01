@@ -1,0 +1,46 @@
+name: Mirror upstream wiki to fork
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mirror-wiki:
+    name: Mirror upstream wiki into this fork's wiki
+    runs-on: ubuntu-latest
+    env:
+      UPSTREAM_OWNER: marcpope
+      FORK_OWNER: GTNeill
+      REPO: cortendesk
+      BRANCH: main
+    steps:
+      - name: Prepare git
+        run: |
+          apt-get update -y
+          apt-get install -y git
+          git --version
+      - name: Mirror wiki (bare clone and push)
+        env:
+          WIKI_PAT: ${{ secrets.WIKI_PAT }}
+        run: |
+          if [ -z "$WIKI_PAT" ]; then
+            echo "ERROR: secret WIKI_PAT is not set. Create a personal access token with 'repo' scope and add it as the repository secret named WIKI_PAT." >&2
+            exit 1
+          fi
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Clean up any existing clone
+          rm -rf repo.wiki.git
+
+          # Clone upstream wiki as a bare repo
+          git clone --bare https://github.com/${UPSTREAM_OWNER}/${REPO}.wiki.git repo.wiki.git
+          cd repo.wiki.git
+
+          # Add fork remote using token for authentication and mirror-push
+          git remote add fork https://x-access-token:${WIKI_PAT}@github.com/${FORK_OWNER}/${REPO}.wiki.git
+
+          # Push all refs to fork (force/overwrite)
+          git push --mirror fork
+
+          echo "Wiki mirror complete."
