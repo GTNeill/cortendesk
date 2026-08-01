@@ -14,10 +14,7 @@ jobs:
       BRANCH: main
     steps:
       - name: Prepare git
-        run: |
-          apt-get update -y
-          apt-get install -y git
-          git --version
+        run: git --version
       - name: Mirror wiki (bare clone and push)
         env:
           WIKI_PAT: ${{ secrets.WIKI_PAT }}
