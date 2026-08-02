@@ -31,11 +31,12 @@ jobs:
           rm -rf repo.wiki.git
 
           # Clone upstream wiki as a bare repo
-          git clone --bare https://github.com/${UPSTREAM_OWNER}/${REPO}.wiki.git repo.wiki.git
-          cd repo.wiki.git
+          # git clone --bare https://github.com/${UPSTREAM_OWNER}/${REPO}.wiki.git repo.wiki.git
+          git clone --bare https://github.com/${UPSTREAM_OWNER}/${REPO}.wiki repo.wiki
+          cd repo.wiki
 
           # Add fork remote using token for authentication and mirror-push
-          git remote add fork https://x-access-token:${WIKI_PAT}@github.com/${FORK_OWNER}/${REPO}.wiki.git
+          git remote add fork https://x-access-token:${WIKI_PAT}@github.com/${FORK_OWNER}/${REPO}.wiki
 
           # Push all refs to fork (force/overwrite)
           git push --mirror fork
