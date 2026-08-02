@@ -6,7 +6,7 @@ use App\Http\Middleware\EnsureAdmin;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\RequireEmailAddress;
 use App\Http\Middleware\RequireMailHealthy;
-use App\Http\Middleware\RequireTwoFactor;
+# use App\Http\Middleware\RequireTwoFactor;
 use App\Http\Middleware\TrustConfiguredProxies;
 use App\Models\TrustedDevice;
 use Illuminate\Foundation\Application;
